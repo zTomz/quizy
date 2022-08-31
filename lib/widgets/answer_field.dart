@@ -1,34 +1,28 @@
 // ignore_for_file: unnecessary_this
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quizy/data.dart';
 
-class AnswerField extends StatefulWidget {
-  String selectedAnswer;
+class AnswerField extends ConsumerWidget {
   final String text;
-
-  AnswerField({Key? key, required this.selectedAnswer, required this.text})
-      : super(key: key);
+  const AnswerField({super.key, required this.text});
 
   @override
-  State<AnswerField> createState() => _AnswerFieldState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedAnswer = ref.watch(selectedAnswerProvider);
 
-class _AnswerFieldState extends State<AnswerField> {
-  @override
-  Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        setState(() {
-          this.widget.selectedAnswer = this.widget.text;
-        });
+        ref.read(selectedAnswerProvider.notifier).state = this.text;
       },
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
         height: 100,
         padding: const EdgeInsets.symmetric(horizontal: 20),
         margin: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          color: this.widget.selectedAnswer == this.widget.text
+          color: selectedAnswer == this.text
               ? Colors.red
               : Colors.white,
           borderRadius: BorderRadius.circular(15),
@@ -51,7 +45,7 @@ class _AnswerFieldState extends State<AnswerField> {
                   border: Border.all(width: 2, color: theme!.accentColor),
                   shape: BoxShape.circle,
                 ),
-                child: this.widget.selectedAnswer == this.widget.text
+                child: selectedAnswer == this.text
                     ? Center(
                         child: Container(
                           width: 15,
@@ -67,7 +61,7 @@ class _AnswerFieldState extends State<AnswerField> {
               const SizedBox(width: 15),
               Expanded(
                 child: Text(
-                  this.widget.text,
+                  this.text,
                   style: theme!.textTheme.bodyText1,
                 ),
               ),

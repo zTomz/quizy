@@ -20,7 +20,7 @@ class ModePickerCard extends StatelessWidget {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => QuizPage(
-              difficulty: this.title,
+              this.title,
             ),
           ),
         );
